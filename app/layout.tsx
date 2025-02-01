@@ -1,8 +1,7 @@
 import { Inter as FontSans } from "next/font/google"
 
 import { cn } from "@/lib/utils"
-import "@liveblocks/react-ui/styles.css";
-import "@liveblocks/react-tiptap/styles.css";
+
 import './globals.css'
 import { Metadata } from "next"
 import {
@@ -23,7 +22,15 @@ export const metadata: Metadata = {
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
+    // ClerkProvider
+    // 解释: 用于提供 Clerk 的上下文
+    // 用法: 用于提供 Clerk 的上下文
+    // 详细: https://docs.clerk.dev/reference/clerk-provider
     <ClerkProvider
+    // appearance
+    // 解释: 用于配置 Clerk 的外观
+    // 用法: 用于配置 Clerk 的外观
+    // 详细: https://docs.clerk.dev/reference/clerk-provider#appearance
       appearance={{
         baseTheme: dark,
         variables: {

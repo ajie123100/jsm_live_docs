@@ -1,5 +1,5 @@
-import { type ClassValue, clsx } from 'clsx';
-import { twMerge } from 'tailwind-merge';
+import { type ClassValue, clsx } from "clsx";
+import { twMerge } from "tailwind-merge";
 
 export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs));
@@ -9,45 +9,54 @@ export const parseStringify = (value: any) => JSON.parse(JSON.stringify(value));
 
 export const getAccessType = (userType: UserType) => {
   switch (userType) {
-    case 'creator':
-      return ['room:write'];
-    case 'editor':
-      return ['room:write'];
-    case 'viewer':
-      return ['room:read', 'room:presence:write'];
+    case "creator":
+      return ["room:write"];
+    case "editor":
+      return ["room:write"];
+    case "viewer":
+      return ["room:read", "room:presence:write"];
     default:
-      return ['room:read', 'room:presence:write'];
+      return ["room:read", "room:presence:write"];
   }
 };
 
+function toChinaTime(utcDate: string): Date {
+  const date = new Date(utcDate);
+  return new Date(date.getTime() + 8 * 60 * 60 * 1000); // 转换为 UTC+8
+}
+
 export const dateConverter = (timestamp: string): string => {
-  const timestampNum = Math.round(new Date(timestamp).getTime() / 1000);
-  const date: Date = new Date(timestampNum * 1000);
-  const now: Date = new Date();
+   // 将UTC时间转换为中国时区（CST，UTC+8）
+   const utcDate = new Date(timestamp);
+   const cstDate = new Date(utcDate.getTime() + 8 * 60 * 60 * 1000);
 
-  const diff: number = now.getTime() - date.getTime();
-  const diffInSeconds: number = diff / 1000;
-  const diffInMinutes: number = diffInSeconds / 60;
-  const diffInHours: number = diffInMinutes / 60;
-  const diffInDays: number = diffInHours / 24;
+   // 获取当前时间
+   const now = new Date();
 
-  switch (true) {
-    case diffInDays > 7:
-      return `${Math.floor(diffInDays / 7)} weeks ago`;
-    case diffInDays >= 1 && diffInDays <= 7:
-      return `${Math.floor(diffInDays)} days ago`;
-    case diffInHours >= 1:
-      return `${Math.floor(diffInHours)} hours ago`;
-    case diffInMinutes >= 1:
-      return `${Math.floor(diffInMinutes)} minutes ago`;
-    default:
-      return 'Just now';
-  }
+   // 计算时间差（以毫秒为单位）
+   const timeDifference = now.getTime() - cstDate.getTime();
+
+   // 将时间差转换为秒、分钟、小时和天
+   const secondsDifference = Math.floor(timeDifference / 1000);
+   const minutesDifference = Math.floor(secondsDifference / 60);
+   const hoursDifference = Math.floor(minutesDifference / 60);
+   const daysDifference = Math.floor(hoursDifference / 24);
+
+   // 根据时间差返回相应的字符串
+   if (timeDifference < 60 * 1000) {
+       return "刚刚"; // 小于1分钟
+   } else if (minutesDifference < 60) {
+       return `${minutesDifference}分钟之前`;
+   } else if (hoursDifference < 24) {
+       return `${hoursDifference}小时之前`;
+   } else {
+       return `${daysDifference}天之前`;
+   }
 };
 
 // Function to generate a random color in hex format, excluding specified colors
 export function getRandomColor() {
-  const avoidColors = ['#000000', '#FFFFFF', '#8B4513']; // Black, White, Brown in hex format
+  const avoidColors = ["#000000", "#FFFFFF", "#8B4513"]; // Black, White, Brown in hex format
 
   let randomColor;
   do {
@@ -64,25 +73,25 @@ export function getRandomColor() {
 }
 
 export const brightColors = [
-  '#2E8B57', // Darker Neon Green
-  '#FF6EB4', // Darker Neon Pink
-  '#00CDCD', // Darker Cyan
-  '#FF00FF', // Darker Neon Magenta
-  '#FF007F', // Darker Bright Pink
-  '#FFD700', // Darker Neon Yellow
-  '#00CED1', // Darker Neon Mint Green
-  '#FF1493', // Darker Neon Red
-  '#00CED1', // Darker Bright Aqua
-  '#FF7F50', // Darker Neon Coral
-  '#9ACD32', // Darker Neon Lime
-  '#FFA500', // Darker Neon Orange
-  '#32CD32', // Darker Neon Chartreuse
-  '#ADFF2F', // Darker Neon Yellow Green
-  '#DB7093', // Darker Neon Fuchsia
-  '#00FF7F', // Darker Spring Green
-  '#FFD700', // Darker Electric Lime
-  '#FF007F', // Darker Bright Magenta
-  '#FF6347', // Darker Neon Vermilion
+  "#2E8B57", // Darker Neon Green
+  "#FF6EB4", // Darker Neon Pink
+  "#00CDCD", // Darker Cyan
+  "#FF00FF", // Darker Neon Magenta
+  "#FF007F", // Darker Bright Pink
+  "#FFD700", // Darker Neon Yellow
+  "#00CED1", // Darker Neon Mint Green
+  "#FF1493", // Darker Neon Red
+  "#00CED1", // Darker Bright Aqua
+  "#FF7F50", // Darker Neon Coral
+  "#9ACD32", // Darker Neon Lime
+  "#FFA500", // Darker Neon Orange
+  "#32CD32", // Darker Neon Chartreuse
+  "#ADFF2F", // Darker Neon Yellow Green
+  "#DB7093", // Darker Neon Fuchsia
+  "#00FF7F", // Darker Spring Green
+  "#FFD700", // Darker Electric Lime
+  "#FF007F", // Darker Bright Magenta
+  "#FF6347", // Darker Neon Vermilion
 ];
 
 export function getUserColor(userId: string) {
